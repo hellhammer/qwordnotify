@@ -123,7 +123,7 @@
             <widget class="QLineEdit" name="delayLineEdit"/>
            </item>
            <item>
-            <widget class="QPushButton" name="startushButton">
+            <widget class="QPushButton" name="startPushButton">
              <property name="text">
               <string>Start</string>
              </property>

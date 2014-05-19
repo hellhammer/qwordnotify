@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'qwordnotify.ui'
 #
-# Created: Sun May 18 18:36:16 2014
+# Created: Mon May 19 12:03:32 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -95,9 +95,9 @@ class Ui_MainWindow(object):
         self.delayLineEdit = QtGui.QLineEdit(self.settingsGroupBox)
         self.delayLineEdit.setObjectName(_fromUtf8("delayLineEdit"))
         self.horizontalLayout.addWidget(self.delayLineEdit)
-        self.startushButton = QtGui.QPushButton(self.settingsGroupBox)
-        self.startushButton.setObjectName(_fromUtf8("startushButton"))
-        self.horizontalLayout.addWidget(self.startushButton)
+        self.startPushButton = QtGui.QPushButton(self.settingsGroupBox)
+        self.startPushButton.setObjectName(_fromUtf8("startPushButton"))
+        self.horizontalLayout.addWidget(self.startPushButton)
         self.verticalLayout_3.addLayout(self.horizontalLayout)
         self.verticalLayout_4.addLayout(self.verticalLayout_3)
         self.verticalLayout_5.addWidget(self.settingsGroupBox)
@@ -159,7 +159,7 @@ class Ui_MainWindow(object):
         self.timeoutLabel.setText(_translate("MainWindow", "Message timeout:", None))
         self.savePushButton.setText(_translate("MainWindow", "Save", None))
         self.delayLabel.setText(_translate("MainWindow", "Message delay:", None))
-        self.startushButton.setText(_translate("MainWindow", "Start", None))
+        self.startPushButton.setText(_translate("MainWindow", "Start", None))
         self.menuFile.setTitle(_translate("MainWindow", "File", None))
         self.menuEdit.setTitle(_translate("MainWindow", "Edit", None))
         self.menuDict.setTitle(_translate("MainWindow", "Dict", None))
