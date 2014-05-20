@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'qwordnotify.ui'
 #
-# Created: Mon May 19 12:03:32 2014
+# Created: Tue May 20 16:25:34 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -156,9 +156,11 @@ class Ui_MainWindow(object):
         self.settingsGroupBox.setTitle(_translate("MainWindow", "Settings:", None))
         self.fileLabel.setText(_translate("MainWindow", "File name:", None))
         self.optionsPushButton.setText(_translate("MainWindow", "Options", None))
-        self.timeoutLabel.setText(_translate("MainWindow", "Message timeout:", None))
+        self.timeoutLabel.setText(_translate("MainWindow", "Message timeout (ms):", None))
+        self.timeoutLineEdit.setText(_translate("MainWindow", "5000", None))
         self.savePushButton.setText(_translate("MainWindow", "Save", None))
-        self.delayLabel.setText(_translate("MainWindow", "Message delay:", None))
+        self.delayLabel.setText(_translate("MainWindow", "Message delay (s):", None))
+        self.delayLineEdit.setText(_translate("MainWindow", "10", None))
         self.startPushButton.setText(_translate("MainWindow", "Start", None))
         self.menuFile.setTitle(_translate("MainWindow", "File", None))
         self.menuEdit.setTitle(_translate("MainWindow", "Edit", None))

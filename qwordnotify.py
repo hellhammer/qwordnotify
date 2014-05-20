@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+from sqlite3 import connect
 import sys
 from PyQt4 import QtCore, QtGui
 from ui_qwordnotify import Ui_MainWindow
@@ -10,8 +11,6 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         QtGui.QMainWindow.__init__(self)
         self.setupUi(self)
 
-#        self.pswd()
-#        self.load()
 
         self.tray = SystemTrayIcon(self)
         self.tray.show()
@@ -23,10 +22,10 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         self.connect(self.actionQuit, QtCore.SIGNAL('triggered()'), self.quit)
 
     def saveClicked(self):
-        self.tray.showMessage("TEST TITLE", "MESSAGE HERE")
+        pass
 
     def startClicked(self):
-        pass
+        self.tray.showMessage("TEST TITLE", "MESSAGE HERE")
 
     def about(self):
         QtGui.QMessageBox.about(self, "TITLE", "TEXT")
@@ -42,16 +41,15 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
 
 class RightClickMenu(QtGui.QMenu):
     def __init__(self, parent=None):
-        QtGui.QMenu.__init__(self, "Edit", parent)
+        QtGui.QMenu.__init__(self, "Menu", parent)
 
         icon = QtGui.QIcon.fromTheme("edit-cut")
-        self.addAction(QtGui.QAction(icon, "&Cut", self))
+        self.addAction(QtGui.QAction(icon, "&Start", self))
 
-        icon = QtGui.QIcon.fromTheme("edit-copy")
-        self.addAction(QtGui.QAction(icon, "Copy (&X)", self))
+        self.addSeparator()
 
-        icon = QtGui.QIcon.fromTheme("edit-paste")
-        self.addAction(QtGui.QAction(icon, "&Paste", self))
+        icon = QtGui.QIcon.fromTheme("quit")
+        self.addAction(QtGui.QAction(icon, "&Quit", self))
 
 class LeftClickMenu(QtGui.QMenu):
     def __init__(self, parent=None):

@@ -88,14 +88,18 @@
          <item>
           <widget class="QLabel" name="timeoutLabel">
            <property name="text">
-            <string>Message timeout:</string>
+            <string>Message timeout (ms):</string>
            </property>
           </widget>
          </item>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <widget class="QLineEdit" name="timeoutLineEdit"/>
+            <widget class="QLineEdit" name="timeoutLineEdit">
+             <property name="text">
+              <string>5000</string>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QPushButton" name="savePushButton">
@@ -113,14 +117,18 @@
          <item>
           <widget class="QLabel" name="delayLabel">
            <property name="text">
-            <string>Message delay:</string>
+            <string>Message delay (s):</string>
            </property>
           </widget>
          </item>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
-            <widget class="QLineEdit" name="delayLineEdit"/>
+            <widget class="QLineEdit" name="delayLineEdit">
+             <property name="text">
+              <string>10</string>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QPushButton" name="startPushButton">
