@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 import os
-from sqlite3 import connect
 import sys
+import time
+import random
 from PyQt4 import QtCore, QtGui
 from ui_qwordnotify import Ui_MainWindow
 
@@ -11,30 +12,91 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         QtGui.QMainWindow.__init__(self)
         self.setupUi(self)
 
+        self.initDictList()
 
         self.tray = SystemTrayIcon(self)
         self.tray.show()
 
+        self.connect(self.dictListView, QtCore.SIGNAL('clicked(QModelIndex)'), self.selectDict)
+        self.connect(self.dictListView, QtCore.SIGNAL('doubleClicked(QModelIndex)'), self.editDict)
         self.connect(self.savePushButton, QtCore.SIGNAL('clicked()'), self.saveClicked)
         self.connect(self.startPushButton, QtCore.SIGNAL('clicked()'), self.startClicked)
         self.connect(self.actionAbout, QtCore.SIGNAL('triggered()'), self.about)
         self.connect(self.actionAbout_Qt, QtCore.SIGNAL('triggered()'), self.aboutQt)
         self.connect(self.actionQuit, QtCore.SIGNAL('triggered()'), self.quit)
 
-    def saveClicked(self):
+
+    def initDictList(self):
+        dictsPath = os.path.join(os.getcwd(), "dicts")
+        self.model = QtGui.QFileSystemModel()
+        self.modelIndex = QtCore.QModelIndex()
+        self.model.setRootPath(dictsPath) # "/home/max/Code/qwordnotify/dicts"
+        self.modelIndex = self.model.index(dictsPath)
+        self.dictListView.setModel(self.model)
+        self.dictListView.setRootIndex(self.modelIndex)
+
+
+
+    def selectDict(self):
+        currentIndex = self.dictListView.currentIndex()
+        filePath = self.model.filePath(currentIndex)
+        self.fileLineEdit.setText(filePath)
+
+    def addDict(self):
         pass
 
+    def editDict(self):
+        print "DEBUG: EDIT SELECTED!"
+
+    def removeDict(self):
+        pass
+
+    def saveClicked(self):
+        self.hide()
+
+    def initTimer(self):
+        self.timer = QtCore.QTimer()
+        self.timer.start(5000)
+        self.connect(self.timer, QtCore.SIGNAL('timeout()'), self.timerUpdate)
+
+    def timerUpdate(self):
+        listSize = len(self.myList)
+        randnumber = random.randrange(0, listSize)
+        randline = self.myList[randnumber]
+        print randnumber, randline
+        randdata = randline.split(":")
+        randword = randdata[0]
+        randdesc = randdata[1]
+        if (len(randdata) > 2):
+            randdesc = randdesc + "\n" + randdata[2]
+        randdesc = randdesc[:-1]
+        self.tray.showMessage(randword.decode('utf-8'), randdesc.decode('utf-8'))
+
     def startClicked(self):
-        self.tray.showMessage("TEST TITLE", "MESSAGE HERE")
+        filePath = self.fileLineEdit.text()
+        timeout = self.timeoutLineEdit.text()
+        delay = self.delayLineEdit.text()
+        self.myList = []
+        with open(filePath) as f:
+            for line in f:
+                self.myList.append(line)
+        f.close()
+        random.shuffle(self.myList)
+
+        self.initTimer()
 
     def about(self):
-        QtGui.QMessageBox.about(self, "TITLE", "TEXT")
+        QtGui.QMessageBox.information(self, "About qWordNotify", "<b>qWordNotify 0.1</b><br>(c) 2014 Anonymous")
 
     def aboutQt(self):
         QtGui.QApplication.aboutQt()
 
     def quit(self):
         QtGui.qApp.quit()
+
+######################################################################################
+
+
 
 
 #######################################################################################

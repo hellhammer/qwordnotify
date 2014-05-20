@@ -29,7 +29,7 @@
          <item>
           <widget class="QPushButton" name="dictNewPushButton">
            <property name="text">
-            <string>New</string>
+            <string>Add</string>
            </property>
           </widget>
          </item>
@@ -63,7 +63,7 @@
          <item>
           <widget class="QLabel" name="fileLabel">
            <property name="text">
-            <string>File name:</string>
+            <string>File path:</string>
            </property>
           </widget>
          </item>
