@@ -6,76 +6,46 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>338</width>
-    <height>388</height>
+    <width>384</width>
+    <height>221</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>qWordNotify</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_5">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
      <widget class="QGroupBox" name="dictGroupBox">
       <property name="title">
        <string>Dictionaries:</string>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QListView" name="dictListView"/>
-       </item>
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout_6">
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <widget class="QPushButton" name="dictNewPushButton">
-           <property name="text">
-            <string>Add</string>
-           </property>
-          </widget>
+          <widget class="QListView" name="dictListView"/>
          </item>
          <item>
-          <widget class="QPushButton" name="dictEditPushButton">
-           <property name="text">
-            <string>Edit</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="dictRemovePushButton">
-           <property name="text">
-            <string>Remove</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="QGroupBox" name="settingsGroupBox">
-      <property name="title">
-       <string>Settings:</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_4">
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout_2">
-         <item>
-          <widget class="QLabel" name="fileLabel">
-           <property name="text">
-            <string>File path:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <layout class="QVBoxLayout" name="verticalLayout_6">
            <item>
-            <widget class="QLineEdit" name="fileLineEdit"/>
+            <widget class="QPushButton" name="dictNewPushButton">
+             <property name="text">
+              <string>Add</string>
+             </property>
+            </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="optionsPushButton">
+            <widget class="QPushButton" name="dictEditPushButton">
              <property name="text">
-              <string>Options</string>
+              <string>Edit</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="dictRemovePushButton">
+             <property name="text">
+              <string>Remove</string>
              </property>
             </widget>
            </item>
@@ -84,60 +54,47 @@
         </layout>
        </item>
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <widget class="QLabel" name="timeoutLabel">
-           <property name="text">
-            <string>Message timeout (ms):</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <item>
-            <widget class="QLineEdit" name="timeoutLineEdit">
-             <property name="text">
-              <string>5000</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="savePushButton">
-             <property name="text">
-              <string>Save</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
        </item>
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_3">
+        <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
-          <widget class="QLabel" name="delayLabel">
+          <widget class="QPushButton" name="optionsPushButton">
            <property name="text">
-            <string>Message delay (s):</string>
+            <string>Options</string>
            </property>
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout">
-           <item>
-            <widget class="QLineEdit" name="delayLineEdit">
-             <property name="text">
-              <string>10</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="startPushButton">
-             <property name="text">
-              <string>Start</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="stopPushButton">
+           <property name="text">
+            <string>Stop</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="startPushButton">
+           <property name="text">
+            <string>Start</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -151,7 +108,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>338</width>
+     <width>384</width>
      <height>26</height>
     </rect>
    </property>
@@ -160,6 +117,7 @@
      <string>File</string>
     </property>
     <addaction name="actionStart"/>
+    <addaction name="actionStop"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -167,6 +125,9 @@
     <property name="title">
      <string>Edit</string>
     </property>
+    <addaction name="actionShow"/>
+    <addaction name="actionHide"/>
+    <addaction name="separator"/>
     <addaction name="actionPreferences"/>
    </widget>
    <widget class="QMenu" name="menuDict">
@@ -227,6 +188,21 @@
   <action name="actionAbout_Qt">
    <property name="text">
     <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="text">
+    <string>Stop</string>
+   </property>
+  </action>
+  <action name="actionShow">
+   <property name="text">
+    <string>Show</string>
+   </property>
+  </action>
+  <action name="actionHide">
+   <property name="text">
+    <string>Hide</string>
    </property>
   </action>
  </widget>
