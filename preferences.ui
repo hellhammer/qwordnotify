@@ -16,6 +16,10 @@
   <property name="windowTitle">
    <string>Preferences</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>icon.png</normaloff>icon.png</iconset>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout_8">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">

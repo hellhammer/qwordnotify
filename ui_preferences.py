@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'preferences.ui'
 #
-# Created: Tue May 27 15:12:59 2014
+# Created: Thu May 29 13:18:35 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -28,6 +28,9 @@ class Ui_Dialog(object):
         Dialog.setObjectName(_fromUtf8("Dialog"))
         Dialog.setWindowModality(QtCore.Qt.ApplicationModal)
         Dialog.resize(363, 228)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8("icon.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Dialog.setWindowIcon(icon)
         self.verticalLayout_8 = QtGui.QVBoxLayout(Dialog)
         self.verticalLayout_8.setObjectName(_fromUtf8("verticalLayout_8"))
         self.horizontalLayout_2 = QtGui.QHBoxLayout()

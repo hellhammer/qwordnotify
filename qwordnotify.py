@@ -34,7 +34,7 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
 
 
     def initPreferences(self):
-        self.preferences = QtCore.QSettings("preferences.cfg", QtCore.QSettings.NativeFormat)
+        self.preferences = QtCore.QSettings("preferences.cfg", QtCore.QSettings.IniFormat)
 
     def initSysTray(self):
         self.sysTray = QtGui.QSystemTrayIcon()
@@ -109,7 +109,9 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         if (len(randdata) > 2):
             randdesc = randdesc + "\n" + randdata[2]
         randdesc = randdesc[:-1]
-        self.sysTray.showMessage(randword.decode('utf-8'), randdesc.decode('utf-8'), self.timeout)
+        randword = QtCore.QString.fromUtf8(randword)
+        randdesc = QtCore.QString.fromUtf8(randdesc)
+        self.sysTray.showMessage(randword, randdesc, self.timeout)
 
     def startClicked(self):
         self.hide()

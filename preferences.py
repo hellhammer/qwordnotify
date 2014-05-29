@@ -12,7 +12,7 @@ class PreferencesDialog(QtGui.QDialog, Ui_Dialog):
         self.connect(self.cancelPushButton, QtCore.SIGNAL('clicked()'), self.cancelButtonClicked)
 
     def initPreferences(self):
-        self.preferences = QtCore.QSettings("preferences.cfg", QtCore.QSettings.NativeFormat)
+        self.preferences = QtCore.QSettings("preferences.cfg", QtCore.QSettings.IniFormat)
         self.fileLineEdit.setText(self.preferences.value("dict").toString())
         self.timeoutLineEdit.setText(self.preferences.value("timeout").toString())
         self.delayLineEdit.setText(self.preferences.value("delay").toString())
