@@ -33,7 +33,7 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_6">
            <item>
-            <widget class="QPushButton" name="dictNewPushButton">
+            <widget class="QPushButton" name="dictAddPushButton">
              <property name="text">
               <string>Add</string>
              </property>
@@ -129,8 +129,7 @@
     <property name="title">
      <string>Edit</string>
     </property>
-    <addaction name="actionShow"/>
-    <addaction name="actionHide"/>
+    <addaction name="actionShowHide"/>
     <addaction name="separator"/>
     <addaction name="actionPreferences"/>
    </widget>
@@ -199,9 +198,9 @@
     <string>Stop</string>
    </property>
   </action>
-  <action name="actionShow">
+  <action name="actionShowHide">
    <property name="text">
-    <string>Show</string>
+    <string>Show/Hide</string>
    </property>
   </action>
   <action name="actionHide">

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'qwordnotify.ui'
 #
-# Created: Thu May 29 13:17:46 2014
+# Created: Tue Jun  3 22:43:08 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -45,9 +45,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.addWidget(self.dictListView)
         self.verticalLayout_6 = QtGui.QVBoxLayout()
         self.verticalLayout_6.setObjectName(_fromUtf8("verticalLayout_6"))
-        self.dictNewPushButton = QtGui.QPushButton(self.dictGroupBox)
-        self.dictNewPushButton.setObjectName(_fromUtf8("dictNewPushButton"))
-        self.verticalLayout_6.addWidget(self.dictNewPushButton)
+        self.dictAddPushButton = QtGui.QPushButton(self.dictGroupBox)
+        self.dictAddPushButton.setObjectName(_fromUtf8("dictAddPushButton"))
+        self.verticalLayout_6.addWidget(self.dictAddPushButton)
         self.dictEditPushButton = QtGui.QPushButton(self.dictGroupBox)
         self.dictEditPushButton.setObjectName(_fromUtf8("dictEditPushButton"))
         self.verticalLayout_6.addWidget(self.dictEditPushButton)
@@ -107,16 +107,15 @@ class Ui_MainWindow(object):
         self.actionAbout_Qt.setObjectName(_fromUtf8("actionAbout_Qt"))
         self.actionStop = QtGui.QAction(MainWindow)
         self.actionStop.setObjectName(_fromUtf8("actionStop"))
-        self.actionShow = QtGui.QAction(MainWindow)
-        self.actionShow.setObjectName(_fromUtf8("actionShow"))
+        self.actionShowHide = QtGui.QAction(MainWindow)
+        self.actionShowHide.setObjectName(_fromUtf8("actionShowHide"))
         self.actionHide = QtGui.QAction(MainWindow)
         self.actionHide.setObjectName(_fromUtf8("actionHide"))
         self.menuFile.addAction(self.actionStart)
         self.menuFile.addAction(self.actionStop)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionQuit)
-        self.menuEdit.addAction(self.actionShow)
-        self.menuEdit.addAction(self.actionHide)
+        self.menuEdit.addAction(self.actionShowHide)
         self.menuEdit.addSeparator()
         self.menuEdit.addAction(self.actionPreferences)
         self.menuDict.addAction(self.actionNew)
@@ -135,7 +134,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "qWordNotify", None))
         self.dictGroupBox.setTitle(_translate("MainWindow", "Dictionaries:", None))
-        self.dictNewPushButton.setText(_translate("MainWindow", "Add", None))
+        self.dictAddPushButton.setText(_translate("MainWindow", "Add", None))
         self.dictEditPushButton.setText(_translate("MainWindow", "Edit", None))
         self.dictRemovePushButton.setText(_translate("MainWindow", "Remove", None))
         self.optionsPushButton.setText(_translate("MainWindow", "Options", None))
@@ -154,6 +153,6 @@ class Ui_MainWindow(object):
         self.actionAbout.setText(_translate("MainWindow", "About", None))
         self.actionAbout_Qt.setText(_translate("MainWindow", "About Qt", None))
         self.actionStop.setText(_translate("MainWindow", "Stop", None))
-        self.actionShow.setText(_translate("MainWindow", "Show", None))
+        self.actionShowHide.setText(_translate("MainWindow", "Show/Hide", None))
         self.actionHide.setText(_translate("MainWindow", "Hide", None))
 

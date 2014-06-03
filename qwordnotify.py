@@ -7,6 +7,7 @@ import random
 from PyQt4 import QtCore, QtGui
 from ui_qwordnotify import Ui_MainWindow
 import preferences
+import editor
 
 class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -23,15 +24,15 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         self.connect(self.stopPushButton, QtCore.SIGNAL('clicked()'), self.stopClicked)
         self.connect(self.startPushButton, QtCore.SIGNAL('clicked()'), self.startClicked)
         self.connect(self.optionsPushButton, QtCore.SIGNAL('clicked()'), self.optionsClicked)
+        self.connect(self.dictAddPushButton, QtCore.SIGNAL('clicked()'), self.addDict)
+        self.connect(self.dictEditPushButton, QtCore.SIGNAL('clicked()'), self.editDict)
+        self.connect(self.dictRemovePushButton, QtCore.SIGNAL('clicked()'), self.removeDict)
         self.connect(self.actionAbout, QtCore.SIGNAL('triggered()'), self.about)
         self.connect(self.actionAbout_Qt, QtCore.SIGNAL('triggered()'), self.aboutQt)
         self.connect(self.actionQuit, QtCore.SIGNAL('triggered()'), self.quit)
         self.connect(self.actionStart, QtCore.SIGNAL('triggered()'), self.startClicked)
         self.connect(self.actionStop, QtCore.SIGNAL('triggered()'), self.stopClicked)
-        self.connect(self.actionShow, QtCore.SIGNAL('triggered()'), self.showTriggered)
-        self.connect(self.actionHide, QtCore.SIGNAL('triggered()'), self.hideTriggered)
-
-
+        self.connect(self.actionShowHide, QtCore.SIGNAL('triggered()'), self.show_hideTriggered)
 
     def initPreferences(self):
         self.preferences = QtCore.QSettings("preferences.cfg", QtCore.QSettings.IniFormat)
@@ -43,8 +44,7 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         rightClickMenu.addAction(self.actionStart)
         rightClickMenu.addAction(self.actionStop)
         rightClickMenu.addSeparator()
-        rightClickMenu.addAction(self.actionShow)
-        rightClickMenu.addAction(self.actionHide)
+        rightClickMenu.addAction(self.actionShowHide)
         rightClickMenu.addSeparator()
         rightClickMenu.addAction(self.actionAbout)
         rightClickMenu.addAction(self.actionAbout_Qt)
@@ -55,16 +55,13 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
 
     def click_trap(self, value):
         if value == self.sysTray.Trigger: #left click!
-            if self.isHidden():
-                self.showTriggered()
-            else:
-                self.hideTriggered()
+            self.show_hideTriggered()
 
-    def showTriggered(self):
-        self.show()
-
-    def hideTriggered(self):
-        self.hide()
+    def show_hideTriggered(self):
+        if self.isHidden():
+            self.show()
+        else:
+            self.hide()
 
     def initDictList(self):
         dictsPath = os.path.join(os.getcwd(), "dicts")
@@ -74,6 +71,11 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         self.modelIndex = self.model.index(dictsPath)
         self.dictListView.setModel(self.model)
         self.dictListView.setRootIndex(self.modelIndex)
+        currentIndex = self.preferences.value("dict")
+        currentIndex = currentIndex.toString()
+        self.dictListView.setAutoScroll(True)
+        self.dictListView.setCurrentIndex(self.model.index(currentIndex))
+        self.dictListView.scrollTo(self.model.index(currentIndex))
 
     def selectDict(self):
         currentIndex = self.dictListView.currentIndex()
@@ -84,13 +86,29 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         self.preferences.sync()
 
     def addDict(self):
-        pass
+        selectDialog = QtGui.QFileDialog()
+        newDictPath = selectDialog.getOpenFileName(self, 'Select dict...', '')
+        if newDictPath != "":
+            QtGui.QMessageBox.information(self, "OKAY", newDictPath + "\nWILL BE ADDED LATER!")
 
     def editDict(self):
-        print "DEBUG: EDIT SELECTED!"
+        filePath = self.preferences.value("dict")
+        filePath = filePath.toString()
+        f = open(filePath, 'r')
+        data = f.read()
+        f.close()
+        data = QtCore.QString.fromUtf8(data)
+        self.editorForm = editor.EditorForm()
+        self.editorForm.plainTextEdit.setPlainText(data)
+        self.editorForm.filePathLabel.setText(filePath)
+        self.editorForm.show()
 
     def removeDict(self):
-        pass
+        filePath = self.preferences.value("dict")
+        filePath = filePath.toString()
+        reply = QtGui.QMessageBox.question(self, "DELETION", "Really delete?\n" + filePath, QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
+        if reply == QtGui.QMessageBox.Yes:
+            QtGui.QMessageBox.information(self, "OKAY", "LATER!")
 
     def initTimer(self):
         self.timer = QtCore.QTimer()
