@@ -1,29 +1,30 @@
 #!/usr/bin/env python
 
-import os
-import sys
-import time
-import random
+import os           # for handling paths
+import sys          # for app args
+import shutil       # for copying files
+import random       # random generator
 from PyQt4 import QtCore, QtGui
 from ui_qwordnotify import Ui_MainWindow
-import preferences
-import editor
+import preferences  # my preferences
+import editor       # my editor
 
 class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
-        self.setupUi(self)
+        self.setupUi(self)                  # UI init
 
-        self.initPreferences()
-        self.initDictList()
-        self.initSysTray()
-        self.sysTray.show()
+        self.initPreferences()              # prefs init
+        self.initDictList()                 # dicts init
+        self.initSysTray()                  # sys tray init
+        self.sysTray.show()                 # sys tray is visible
 
         self.connect(self.dictListView, QtCore.SIGNAL('clicked(QModelIndex)'), self.selectDict)
         self.connect(self.dictListView, QtCore.SIGNAL('doubleClicked(QModelIndex)'), self.editDict)
         self.connect(self.stopPushButton, QtCore.SIGNAL('clicked()'), self.stopClicked)
         self.connect(self.startPushButton, QtCore.SIGNAL('clicked()'), self.startClicked)
         self.connect(self.optionsPushButton, QtCore.SIGNAL('clicked()'), self.optionsClicked)
+        self.connect(self.dictNewPushButton, QtCore.SIGNAL('clicked()'), self.newDict)
         self.connect(self.dictAddPushButton, QtCore.SIGNAL('clicked()'), self.addDict)
         self.connect(self.dictEditPushButton, QtCore.SIGNAL('clicked()'), self.editDict)
         self.connect(self.dictRemovePushButton, QtCore.SIGNAL('clicked()'), self.removeDict)
@@ -33,63 +34,77 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         self.connect(self.actionStart, QtCore.SIGNAL('triggered()'), self.startClicked)
         self.connect(self.actionStop, QtCore.SIGNAL('triggered()'), self.stopClicked)
         self.connect(self.actionShowHide, QtCore.SIGNAL('triggered()'), self.show_hideTriggered)
+        self.connect(self.actionNew, QtCore.SIGNAL('triggered()'), self.newDict)
+        self.connect(self.actionAdd, QtCore.SIGNAL('triggered()'), self.addDict)
+        self.connect(self.actionEdit, QtCore.SIGNAL('triggered()'), self.editDict)
+        self.connect(self.actionRemove, QtCore.SIGNAL('triggered()'), self.removeDict)
 
     def initPreferences(self):
-        self.preferences = QtCore.QSettings("preferences.cfg", QtCore.QSettings.IniFormat)
+        self.preferences = QtCore.QSettings("preferences.cfg", QtCore.QSettings.IniFormat)  # reading cfg ini file
 
     def initSysTray(self):
-        self.sysTray = QtGui.QSystemTrayIcon()
-        self.sysTray.setIcon(QtGui.QIcon(os.path.join(os.getcwd(), "icon.png")))
-        rightClickMenu = QtGui.QMenu()
-        rightClickMenu.addAction(self.actionStart)
-        rightClickMenu.addAction(self.actionStop)
-        rightClickMenu.addSeparator()
-        rightClickMenu.addAction(self.actionShowHide)
-        rightClickMenu.addSeparator()
-        rightClickMenu.addAction(self.actionAbout)
-        rightClickMenu.addAction(self.actionAbout_Qt)
-        rightClickMenu.addSeparator()
-        rightClickMenu.addAction(self.actionQuit)
-        self.sysTray.setContextMenu(rightClickMenu)
-        self.sysTray.activated.connect(self.click_trap)
+        self.sysTray = QtGui.QSystemTrayIcon()          # creating sys tray
+        self.sysTray.setIcon(QtGui.QIcon(os.path.join(os.getcwd(), "icon.png")))    # setting icon
+        rightClickMenu = QtGui.QMenu()                  # creating menu
+        rightClickMenu.addAction(self.actionStart)      # adding actions to menu
+        rightClickMenu.addAction(self.actionStop)       # adding actions to menu
+        rightClickMenu.addSeparator()                   # adding separator
+        rightClickMenu.addAction(self.actionShowHide)   # adding actions to menu
+        rightClickMenu.addSeparator()                   # adding separator
+        rightClickMenu.addAction(self.actionAbout)      # adding actions to menu
+        rightClickMenu.addAction(self.actionAbout_Qt)   # adding actions to menu
+        rightClickMenu.addSeparator()                   # separator
+        rightClickMenu.addAction(self.actionQuit)       # adding actions to menu
+        self.sysTray.setContextMenu(rightClickMenu)     # setting menu for systray
+        self.sysTray.activated.connect(self.click_trap) # signal for icon left click
 
     def click_trap(self, value):
-        if value == self.sysTray.Trigger: #left click!
-            self.show_hideTriggered()
+        if value == self.sysTray.Trigger:   # left click!
+            self.show_hideTriggered()       # invoking show/hide event
 
     def show_hideTriggered(self):
-        if self.isHidden():
-            self.show()
+        if self.isHidden():         # check if MainWindow is hidden
+            self.show()             # if True then Show
         else:
-            self.hide()
+            self.hide()             # else Hide
 
     def initDictList(self):
-        dictsPath = os.path.join(os.getcwd(), "dicts")
-        self.model = QtGui.QFileSystemModel()
-        self.modelIndex = QtCore.QModelIndex()
-        self.model.setRootPath(dictsPath) # "/home/max/Code/qwordnotify/dicts"
-        self.modelIndex = self.model.index(dictsPath)
-        self.dictListView.setModel(self.model)
-        self.dictListView.setRootIndex(self.modelIndex)
-        currentIndex = self.preferences.value("dict")
-        currentIndex = currentIndex.toString()
-        self.dictListView.setAutoScroll(True)
-        self.dictListView.setCurrentIndex(self.model.index(currentIndex))
-        self.dictListView.scrollTo(self.model.index(currentIndex))
+        dictsPath = os.path.join(os.getcwd(), "dicts")      # setting path with current path + dicts
+        self.model = QtGui.QFileSystemModel()               # creating FS model
+        self.modelIndex = QtCore.QModelIndex()              # creating model index
+        self.model.setRootPath(dictsPath)                   # setting path for model
+        self.modelIndex = self.model.index(dictsPath)       # getting model index
+        self.dictListView.setModel(self.model)              # setting model for ListView
+        self.dictListView.setRootIndex(self.modelIndex)     # setting index for ListView
+        currentIndex = self.preferences.value("dict")       # reading index from cfg
+        currentIndex = currentIndex.toString()              # translation to QString
+        self.dictListView.setAutoScroll(True)               # autoscrolling
+        self.dictListView.setCurrentIndex(self.model.index(currentIndex))   # setting index
+        self.dictListView.scrollTo(self.model.index(currentIndex))  # scroll to current index
 
     def selectDict(self):
-        currentIndex = self.dictListView.currentIndex()
-        print currentIndex.row()
-        filePath = self.model.filePath(currentIndex)
-        self.preferences.setValue("index", currentIndex.row())
-        self.preferences.setValue("dict", filePath)
-        self.preferences.sync()
+        currentIndex = self.dictListView.currentIndex()         # getting current index
+        print "DEBUG:", currentIndex.row()                      # debug info current row
+        filePath = self.model.filePath(currentIndex)            # getting file path from index
+        self.preferences.setValue("index", currentIndex.row())  # saving row to cfg
+        self.preferences.setValue("dict", filePath)             # saving file path to cfg
+        self.preferences.sync()                                 # updating cfg file
+
+    def newDict(self):
+        selectDialog = QtGui.QFileDialog()
+        newDictPath = selectDialog.getSaveFileName(self, 'Name of new dict...', 'dicts', 'TXT Files (*.txt)')
+        if newDictPath != "":
+            self.editorForm = editor.EditorForm()
+            self.editorForm.filePathLabel.setText(newDictPath)
+            self.editorForm.show()
+#            QtGui.QMessageBox.information(self, "CREATED", newDictPath + "\nHas been created!")
 
     def addDict(self):
         selectDialog = QtGui.QFileDialog()
-        newDictPath = selectDialog.getOpenFileName(self, 'Select dict...', '')
-        if newDictPath != "":
-            QtGui.QMessageBox.information(self, "OKAY", newDictPath + "\nWILL BE ADDED LATER!")
+        addDictPath = selectDialog.getOpenFileName(self, 'Select dict...', '', 'TXT Files (*.txt)')
+        if addDictPath != "":
+            shutil.copy(os.path.abspath(str(addDictPath)), "dicts")
+            QtGui.QMessageBox.information(self, "ADDED", addDictPath + "\nHas been added to \'dicts\' directory!")
 
     def editDict(self):
         filePath = self.preferences.value("dict")
@@ -108,7 +123,8 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         filePath = filePath.toString()
         reply = QtGui.QMessageBox.question(self, "DELETION", "Really delete?\n" + filePath, QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
         if reply == QtGui.QMessageBox.Yes:
-            QtGui.QMessageBox.information(self, "OKAY", "LATER!")
+            os.remove(os.path.abspath(str(filePath)))
+            QtGui.QMessageBox.information(self, "DELETED", filePath + "\nHas been deleted!")
 
     def initTimer(self):
         self.timer = QtCore.QTimer()
@@ -120,13 +136,14 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         random.shuffle(self.myList)
         randnumber = random.randrange(0, listSize)
         randline = self.myList[randnumber]
-        print randnumber, randline
+        print "DEBUG:", randnumber, randline.rstrip()
         randdata = randline.split(":")
         randword = randdata[0]
         randdesc = randdata[1]
         if (len(randdata) > 2):
             randdesc = randdesc + "\n" + randdata[2]
-        randdesc = randdesc[:-1]
+#        randdesc = randdesc[:-1]                       # # removing line terminator (old)
+        randdesc = randdesc.rstrip()                    # removing line terminator
         randword = QtCore.QString.fromUtf8(randword)
         randdesc = QtCore.QString.fromUtf8(randdesc)
         self.sysTray.showMessage(randword, randdesc, self.timeout)

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>384</width>
-    <height>221</height>
+    <height>254</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,6 +32,13 @@
          </item>
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_6">
+           <item>
+            <widget class="QPushButton" name="dictNewPushButton">
+             <property name="text">
+              <string>New</string>
+             </property>
+            </widget>
+           </item>
            <item>
             <widget class="QPushButton" name="dictAddPushButton">
              <property name="text">
@@ -138,6 +145,7 @@
      <string>Dict</string>
     </property>
     <addaction name="actionNew"/>
+    <addaction name="actionAdd"/>
     <addaction name="actionEdit"/>
     <addaction name="actionRemove"/>
    </widget>
@@ -206,6 +214,11 @@
   <action name="actionHide">
    <property name="text">
     <string>Hide</string>
+   </property>
+  </action>
+  <action name="actionAdd">
+   <property name="text">
+    <string>Add</string>
    </property>
   </action>
  </widget>
