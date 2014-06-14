@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>363</width>
-    <height>228</height>
+    <height>222</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,7 +35,11 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="fileLineEdit"/>
+          <widget class="QLineEdit" name="fileLineEdit">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -110,15 +114,12 @@
          </item>
          <item>
           <widget class="QCheckBox" name="checkBox">
-           <property name="text">
-            <string>use notifyd</string>
+           <property name="enabled">
+            <bool>false</bool>
            </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label">
            <property name="text">
-            <string>GNULinux only</string>
+            <string>Use notifyd
+(GNU/Linux only)</string>
            </property>
           </widget>
          </item>

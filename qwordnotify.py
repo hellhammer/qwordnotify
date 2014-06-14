@@ -38,6 +38,7 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         self.connect(self.actionAdd, QtCore.SIGNAL('triggered()'), self.addDict)
         self.connect(self.actionEdit, QtCore.SIGNAL('triggered()'), self.editDict)
         self.connect(self.actionRemove, QtCore.SIGNAL('triggered()'), self.removeDict)
+        self.connect(self.actionPreferences, QtCore.SIGNAL('triggered()'), self.optionsClicked)
 
     def initPreferences(self):
         self.preferences = QtCore.QSettings("preferences.cfg", QtCore.QSettings.IniFormat)  # reading cfg ini file
@@ -84,8 +85,8 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
 
     def selectDict(self):
         currentIndex = self.dictListView.currentIndex()         # getting current index
-        print "DEBUG:", currentIndex.row()                      # debug info current row
         filePath = self.model.filePath(currentIndex)            # getting file path from index
+        self.debug("%d %s" % (currentIndex.row(), filePath))    # debug info current row & file path
         self.preferences.setValue("index", currentIndex.row())  # saving row to cfg
         self.preferences.setValue("dict", filePath)             # saving file path to cfg
         self.preferences.sync()                                 # updating cfg file
@@ -136,7 +137,7 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         random.shuffle(self.myList)
         randnumber = random.randrange(0, listSize)
         randline = self.myList[randnumber]
-        print "DEBUG:", randnumber, randline.rstrip()
+        self.debug("%d %s" % (randnumber, randline.rstrip()))
         randdata = randline.split(":")
         randword = randdata[0]
         randdesc = randdata[1]
@@ -146,13 +147,33 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         randdesc = randdesc.rstrip()                    # removing line terminator
         randword = QtCore.QString.fromUtf8(randword)
         randdesc = QtCore.QString.fromUtf8(randdesc)
-        self.sysTray.showMessage(randword, randdesc, self.timeout)
+
+        if self.notifyd == True:
+            import pynotify
+            pynotify.init("init")
+            randword = str(randword)
+            randdesc = str(randdesc)
+            randdesc = "<b><i>" + randdesc + "</i></b>"
+            msg = pynotify.Notification(randword, randdesc, os.path.join(os.getcwd(), "icon.png"))
+            msg.set_timeout(self.timeout)
+            msg.show()
+        elif self.notifyd == False:
+            self.sysTray.showMessage(randword, randdesc, self.noicon, self.timeout)
+        else:
+            QtGui.QMessageBox.information(self, "DELETED", filePath + "\nHas been deleted!")
+            self.debug("Unexpected error occurred!")
 
     def startClicked(self):
         self.hide()
         filePath = self.preferences.value("dict").toString()
         self.timeout = self.preferences.value("timeout").toInt()[0]*1000
         self.delay = self.preferences.value("delay").toInt()[0]*1000
+        if self.preferences.value("notifyd").toString() == "true":
+            self.notifyd = True
+        else:
+            self.notifyd = False
+        self.icon = QtGui.QSystemTrayIcon.Information
+        self.noicon = QtGui.QSystemTrayIcon.NoIcon
         self.myList = []
         with open(filePath) as f:
             for line in f:
@@ -161,11 +182,13 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         random.shuffle(self.myList)
 
         self.initTimer()
-        self.sysTray.showMessage("qWordNotify", "Timer started!")
+        self.sysTray.showMessage("qWordNotify", "Timer started!", self.icon, 1000)
+        self.debug("Timer started!")
 
     def stopClicked(self):
         self.timer.stop()
-        self.sysTray.showMessage("qWordNotify", "Timer stopped!")
+        self.sysTray.showMessage("qWordNotify", "Timer stopped!", self.icon, 1000)
+        self.debug("Timer stopped!")
 
     def optionsClicked(self):
         self.prefDialog = preferences.PreferencesDialog()
@@ -181,6 +204,8 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
     def quit(self):
         QtGui.qApp.quit()
 
+    def debug(self, msg):
+        print "DEBUG:", msg
 
 app = QtGui.QApplication(sys.argv)
 #app.setStyle(QtGui.QStyleFactory.create('Cleanlooks'))

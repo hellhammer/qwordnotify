@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'editor.ui'
 #
-# Created: Tue Jun  3 22:00:17 2014
+# Created: Sat Jun 14 15:36:01 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -27,7 +27,7 @@ class Ui_EditorForm(object):
     def setupUi(self, EditorForm):
         EditorForm.setObjectName(_fromUtf8("EditorForm"))
         EditorForm.setWindowModality(QtCore.Qt.WindowModal)
-        EditorForm.resize(489, 307)
+        EditorForm.resize(489, 301)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(_fromUtf8("icon.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         EditorForm.setWindowIcon(icon)
@@ -36,6 +36,11 @@ class Ui_EditorForm(object):
         self.plainTextEdit = QtGui.QPlainTextEdit(EditorForm)
         self.plainTextEdit.setObjectName(_fromUtf8("plainTextEdit"))
         self.verticalLayout.addWidget(self.plainTextEdit)
+        self.line = QtGui.QFrame(EditorForm)
+        self.line.setFrameShape(QtGui.QFrame.HLine)
+        self.line.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line.setObjectName(_fromUtf8("line"))
+        self.verticalLayout.addWidget(self.line)
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.filePathLabel = QtGui.QLabel(EditorForm)

@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>489</width>
-    <height>307</height>
+    <height>301</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,6 +23,13 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QPlainTextEdit" name="plainTextEdit"/>
+   </item>
+   <item>
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">

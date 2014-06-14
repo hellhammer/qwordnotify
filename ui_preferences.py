@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'preferences.ui'
 #
-# Created: Thu May 29 13:18:35 2014
+# Created: Sat Jun 14 15:36:03 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -27,7 +27,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName(_fromUtf8("Dialog"))
         Dialog.setWindowModality(QtCore.Qt.ApplicationModal)
-        Dialog.resize(363, 228)
+        Dialog.resize(363, 222)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(_fromUtf8("icon.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Dialog.setWindowIcon(icon)
@@ -43,6 +43,7 @@ class Ui_Dialog(object):
         self.fileLabel.setObjectName(_fromUtf8("fileLabel"))
         self.verticalLayout_3.addWidget(self.fileLabel)
         self.fileLineEdit = QtGui.QLineEdit(Dialog)
+        self.fileLineEdit.setReadOnly(True)
         self.fileLineEdit.setObjectName(_fromUtf8("fileLineEdit"))
         self.verticalLayout_3.addWidget(self.fileLineEdit)
         self.verticalLayout_6.addLayout(self.verticalLayout_3)
@@ -83,11 +84,9 @@ class Ui_Dialog(object):
         spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem)
         self.checkBox = QtGui.QCheckBox(Dialog)
+        self.checkBox.setEnabled(False)
         self.checkBox.setObjectName(_fromUtf8("checkBox"))
         self.verticalLayout.addWidget(self.checkBox)
-        self.label = QtGui.QLabel(Dialog)
-        self.label.setObjectName(_fromUtf8("label"))
-        self.verticalLayout.addWidget(self.label)
         spacerItem1 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem1)
         self.verticalLayout_7.addLayout(self.verticalLayout)
@@ -119,8 +118,8 @@ class Ui_Dialog(object):
         self.timeoutLabel.setText(_translate("Dialog", "Message timeout (s):", None))
         self.delayLabel.setText(_translate("Dialog", "Message delay (s):", None))
         self.label_2.setText(_translate("Dialog", "Language:", None))
-        self.checkBox.setText(_translate("Dialog", "use notifyd", None))
-        self.label.setText(_translate("Dialog", "GNULinux only", None))
+        self.checkBox.setText(_translate("Dialog", "Use notifyd\n"
+"(GNU/Linux only)", None))
         self.cancelPushButton.setText(_translate("Dialog", "Cancel", None))
         self.savePushButton.setText(_translate("Dialog", "Save", None))
 

@@ -10,10 +10,9 @@ class EditorForm(QtGui.QWidget, Ui_EditorForm):
         self.connect(self.cancelPushButton, QtCore.SIGNAL('clicked()'), self.cancelButtonClicked)
 
     def saveButtonClicked(self):
-        reply = QtGui.QMessageBox.question(self, "SAVE?", "Really save?", QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
+        reply = QtGui.QMessageBox.question(self, "SAVING", "Really save?", QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
         if reply == QtGui.QMessageBox.Yes:
             self.saveTrigger(self.filePathLabel.text())
-        #self.close()
 
     def cancelButtonClicked(self):
         self.close()
