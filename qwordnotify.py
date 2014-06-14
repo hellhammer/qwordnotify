@@ -202,6 +202,7 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         QtGui.QApplication.aboutQt()
 
     def quit(self):
+	self.stopClicked()
         QtGui.qApp.quit()
 
     def debug(self, msg):
