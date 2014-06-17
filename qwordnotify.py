@@ -42,10 +42,13 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
 
     def initPreferences(self):
         self.preferences = QtCore.QSettings("preferences.cfg", QtCore.QSettings.IniFormat)  # reading cfg ini file
+        self.preferences.setIniCodec('UTF-8')
 
     def initSysTray(self):
         self.sysTray = QtGui.QSystemTrayIcon()          # creating sys tray
-        self.sysTray.setIcon(QtGui.QIcon(os.path.join(os.getcwd(), "icon.png")))    # setting icon
+        iconPath = os.path.join(os.getcwd(), "icon.png")   # unicoded icon path
+        iconPath = iconPath.decode('utf-8')             # unicoded icon path
+        self.sysTray.setIcon(QtGui.QIcon(iconPath))     # setting icon
         rightClickMenu = QtGui.QMenu()                  # creating menu
         rightClickMenu.addAction(self.actionStart)      # adding actions to menu
         rightClickMenu.addAction(self.actionStop)       # adding actions to menu
@@ -71,6 +74,7 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
 
     def initDictList(self):
         dictsPath = os.path.join(os.getcwd(), "dicts")      # setting path with current path + dicts
+        dictsPath = dictsPath.decode('utf-8')
         self.model = QtGui.QFileSystemModel()               # creating FS model
         self.modelIndex = QtCore.QModelIndex()              # creating model index
         self.model.setRootPath(dictsPath)                   # setting path for model
@@ -104,15 +108,21 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         selectDialog = QtGui.QFileDialog()
         addDictPath = selectDialog.getOpenFileName(self, 'Select dict...', '', 'TXT Files (*.txt)')
         if addDictPath != "":
-            shutil.copy(os.path.abspath(str(addDictPath)), "dicts")
+            addDictPath = str(addDictPath.toUtf8())
+            addDictPath = addDictPath.decode('utf-8')
+            shutil.copy(os.path.abspath(addDictPath), "dicts")
             QtGui.QMessageBox.information(self, "ADDED", addDictPath + "\nHas been added to \'dicts\' directory!")
 
     def editDict(self):
         filePath = self.preferences.value("dict")
         filePath = filePath.toString()
+        filePath = str(filePath.toUtf8())
+        filePath = filePath.decode('utf-8')
+
         f = open(filePath, 'r')
         data = f.read()
         f.close()
+
         data = QtCore.QString.fromUtf8(data)
         self.editorForm = editor.EditorForm()
         self.editorForm.plainTextEdit.setPlainText(data)
@@ -124,7 +134,9 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         filePath = filePath.toString()
         reply = QtGui.QMessageBox.question(self, "DELETION", "Really delete?\n" + filePath, QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
         if reply == QtGui.QMessageBox.Yes:
-            os.remove(os.path.abspath(str(filePath)))
+            filePath = str(filePath.toUtf8())
+            filePath = filePath.decode('utf-8')
+            os.remove(os.path.abspath(filePath))
             QtGui.QMessageBox.information(self, "DELETED", filePath + "\nHas been deleted!")
 
     def initTimer(self):
@@ -154,13 +166,15 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
             randword = str(randword)
             randdesc = str(randdesc)
             randdesc = "<b><i>" + randdesc + "</i></b>"
+            iconPath = os.path.join(os.getcwd(), "icon.png")   # unicoded icon path
+            iconPath = iconPath.decode('utf-8')
             msg = pynotify.Notification(randword, randdesc, os.path.join(os.getcwd(), "icon.png"))
             msg.set_timeout(self.timeout)
             msg.show()
         elif self.notifyd == False:
             self.sysTray.showMessage(randword, randdesc, self.noicon, self.timeout)
         else:
-            QtGui.QMessageBox.information(self, "DELETED", filePath + "\nHas been deleted!")
+            QtGui.QMessageBox.information(self, "ERROR", "Unexpected error occurred!")
             self.debug("Unexpected error occurred!")
 
     def startClicked(self):
@@ -175,10 +189,14 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         self.icon = QtGui.QSystemTrayIcon.Information
         self.noicon = QtGui.QSystemTrayIcon.NoIcon
         self.myList = []
+        filePath = str(filePath.toUtf8())
+        filePath = filePath.decode('utf-8')
+
         with open(filePath) as f:
             for line in f:
                 self.myList.append(line)
         f.close()
+
         random.shuffle(self.myList)
 
         self.initTimer()

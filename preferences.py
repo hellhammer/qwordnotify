@@ -31,6 +31,7 @@ class PreferencesDialog(QtGui.QDialog, Ui_Dialog):
 
     def initPreferences(self):
         self.preferences = QtCore.QSettings("preferences.cfg", QtCore.QSettings.IniFormat)
+        self.preferences.setIniCodec('UTF-8')
         platform = self.checkOS()
         self.preferences.setValue("platform", platform)
         self.preferences.sync()

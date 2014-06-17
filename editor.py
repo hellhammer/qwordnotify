@@ -20,7 +20,12 @@ class EditorForm(QtGui.QWidget, Ui_EditorForm):
     def saveTrigger(self, filePath):
         data = self.plainTextEdit.toPlainText()
         data = str(data.toUtf8())
+
+        filePath = str(filePath.toUtf8())
+        filePath = filePath.decode('utf-8')
+
         f = open(filePath, 'w')
         f.write(data)
         f.close()
+
         self.close()
