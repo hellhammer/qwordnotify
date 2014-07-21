@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
+
 import sys
 from PyQt4 import QtCore, QtGui
 from ui_preferences import Ui_Dialog
+
 
 class PreferencesDialog(QtGui.QDialog, Ui_Dialog):
     def __init__(self):
@@ -19,11 +22,14 @@ class PreferencesDialog(QtGui.QDialog, Ui_Dialog):
 
     def checkNotifyd(self):
         try:
-            import pynotify
-            pynotify.init("init")
-            msg = pynotify.Notification("INFORMATION", "Using \'notifyd\' option!")
-            msg.set_timeout(1000)
-            msg.show()
+            #global pynotify
+            #import pynotify
+            #pynotify.init("test")
+            #testmsg = pynotify.Notification("INFORMATION", "Using \'notifyd\' option!")
+            #testmsg.set_timeout(1000)
+            #testmsg.show()
+            #del testmsg
+            #del pynotify
             return True
         except ImportError, e:
             self.debug("%s\nDEBUG: Python package \"pynotify\" not found" % e)
@@ -48,7 +54,7 @@ class PreferencesDialog(QtGui.QDialog, Ui_Dialog):
     def notifydChecked(self):
         if self.checkBox.isChecked():
             if self.checkNotifyd() == False:
-                QtGui.QMessageBox.information(self, "ERROR", "Python package \"pynotify\" not found")
+                QtGui.QMessageBox.information(self, self.tr("ERROR"), self.tr("Python package \"pynotify\" not found"))
                 self.checkBox.setChecked(False)
 
     def saveButtonClicked(self):
@@ -67,3 +73,6 @@ class PreferencesDialog(QtGui.QDialog, Ui_Dialog):
 
     def debug(self, msg):
         print "DEBUG:", msg
+        
+    def tr(self, text):
+        return QtCore.QCoreApplication.translate("PreferencesDialog", text)

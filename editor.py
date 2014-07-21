@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from PyQt4 import QtCore, QtGui
 from ui_editor import Ui_EditorForm
 
@@ -10,7 +12,7 @@ class EditorForm(QtGui.QWidget, Ui_EditorForm):
         self.connect(self.cancelPushButton, QtCore.SIGNAL('clicked()'), self.cancelButtonClicked)
 
     def saveButtonClicked(self):
-        reply = QtGui.QMessageBox.question(self, "SAVING", "Really save?", QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
+        reply = QtGui.QMessageBox.question(self, self.tr("SAVING"), self.tr("Really save?"), QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
         if reply == QtGui.QMessageBox.Yes:
             self.saveTrigger(self.filePathLabel.text())
 
@@ -29,3 +31,6 @@ class EditorForm(QtGui.QWidget, Ui_EditorForm):
         f.close()
 
         self.close()
+        
+    def tr(self, text):
+        return QtCore.QCoreApplication.translate("EditorForm", text)

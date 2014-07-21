@@ -1,13 +1,19 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import os           # for handling paths
 import sys          # for app args
+import csv
 import shutil       # for copying files
 import random       # random generator
+#import pynotify
+import subprocess
 from PyQt4 import QtCore, QtGui
 from ui_qwordnotify import Ui_MainWindow
-import preferences  # my preferences
-import editor       # my editor
+from preferences import PreferencesDialog
+from editor import EditorForm
+
+appVersion = "0.3.0"
 
 class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -58,6 +64,7 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         rightClickMenu.addAction(self.actionAbout)      # adding actions to menu
         rightClickMenu.addAction(self.actionAbout_Qt)   # adding actions to menu
         rightClickMenu.addSeparator()                   # separator
+        self.actionQuit.setIcon(QtGui.QIcon("icons/exit.png"))
         rightClickMenu.addAction(self.actionQuit)       # adding actions to menu
         self.sysTray.setContextMenu(rightClickMenu)     # setting menu for systray
         self.sysTray.activated.connect(self.click_trap) # signal for icon left click
@@ -81,8 +88,10 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         self.modelIndex = self.model.index(dictsPath)       # getting model index
         self.dictListView.setModel(self.model)              # setting model for ListView
         self.dictListView.setRootIndex(self.modelIndex)     # setting index for ListView
+
         currentIndex = self.preferences.value("dict")       # reading index from cfg
         currentIndex = currentIndex.toString()              # translation to QString
+
         self.dictListView.setAutoScroll(True)               # autoscrolling
         self.dictListView.setCurrentIndex(self.model.index(currentIndex))   # setting index
         self.dictListView.scrollTo(self.model.index(currentIndex))  # scroll to current index
@@ -97,21 +106,21 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
 
     def newDict(self):
         selectDialog = QtGui.QFileDialog()
-        newDictPath = selectDialog.getSaveFileName(self, 'Name of new dict...', 'dicts', 'TXT Files (*.txt)')
+        newDictPath = selectDialog.getSaveFileName(self, self.tr('Name of new dict...'), 'dicts', 'TXT Files (*.txt)')
         if newDictPath != "":
-            self.editorForm = editor.EditorForm()
+            self.editorForm = EditorForm()
             self.editorForm.filePathLabel.setText(newDictPath)
             self.editorForm.show()
 #            QtGui.QMessageBox.information(self, "CREATED", newDictPath + "\nHas been created!")
 
     def addDict(self):
         selectDialog = QtGui.QFileDialog()
-        addDictPath = selectDialog.getOpenFileName(self, 'Select dict...', '', 'TXT Files (*.txt)')
+        addDictPath = selectDialog.getOpenFileName(self, self.tr('Select dict...'), '', 'TXT Files (*.txt)')
         if addDictPath != "":
             addDictPath = str(addDictPath.toUtf8())
             addDictPath = addDictPath.decode('utf-8')
             shutil.copy(os.path.abspath(addDictPath), "dicts")
-            QtGui.QMessageBox.information(self, "ADDED", addDictPath + "\nHas been added to \'dicts\' directory!")
+            QtGui.QMessageBox.information(self, self.tr("ADDED"), addDictPath + self.tr("\nHas been added to \'dicts\' directory!"))
 
     def editDict(self):
         filePath = self.preferences.value("dict")
@@ -124,7 +133,7 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         f.close()
 
         data = QtCore.QString.fromUtf8(data)
-        self.editorForm = editor.EditorForm()
+        self.editorForm = EditorForm()
         self.editorForm.plainTextEdit.setPlainText(data)
         self.editorForm.filePathLabel.setText(filePath)
         self.editorForm.show()
@@ -132,12 +141,12 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
     def removeDict(self):
         filePath = self.preferences.value("dict")
         filePath = filePath.toString()
-        reply = QtGui.QMessageBox.question(self, "DELETION", "Really delete?\n" + filePath, QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
+        reply = QtGui.QMessageBox.question(self, self.tr("DELETION"), self.tr("Really delete?\n") + filePath, QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
         if reply == QtGui.QMessageBox.Yes:
             filePath = str(filePath.toUtf8())
             filePath = filePath.decode('utf-8')
             os.remove(os.path.abspath(filePath))
-            QtGui.QMessageBox.information(self, "DELETED", filePath + "\nHas been deleted!")
+            QtGui.QMessageBox.information(self, self.tr("DELETED"), filePath + self.tr("\nHas been deleted!"))
 
     def initTimer(self):
         self.timer = QtCore.QTimer()
@@ -145,90 +154,120 @@ class WordNotify_Window(QtGui.QMainWindow, Ui_MainWindow):
         self.connect(self.timer, QtCore.SIGNAL('timeout()'), self.timerUpdate)
 
     def timerUpdate(self):
-        listSize = len(self.myList)
-        random.shuffle(self.myList)
-        randnumber = random.randrange(0, listSize)
-        randline = self.myList[randnumber]
-        self.debug("%d %s" % (randnumber, randline.rstrip()))
-        randdata = randline.split(":")
-        randword = randdata[0]
-        randdesc = randdata[1]
-        if (len(randdata) > 2):
-            randdesc = randdesc + "\n" + randdata[2]
-#        randdesc = randdesc[:-1]                       # # removing line terminator (old)
-        randdesc = randdesc.rstrip()                    # removing line terminator
-        randword = QtCore.QString.fromUtf8(randword)
-        randdesc = QtCore.QString.fromUtf8(randdesc)
+        dictSize = len(self.myDict)
+        #random.shuffle(self.myList)
+        randNumber = random.randrange(1, dictSize)
+        randLine = self.myDict[randNumber]
+        #self.debug("%d %s" % (randnumber, randline.rstrip()))
+
+        if (len(randLine) < 3):
+            head, body, extra = randLine[0], randLine[1], ''
+        else:
+            head, body, extra = randLine[0], randLine[1], randLine[2]
+
+        self.debug("[%d/%d] %s ― %s ― %s" % (randNumber, dictSize, head, body, extra))
+
+        head = QtCore.QString.fromUtf8(head)
+        body = body + "\n" + extra
+        body = body.rstrip()
+        #extra = QtCore.QString.fromUtf8(extra)
+        body = QtCore.QString.fromUtf8(body)
 
         if self.notifyd == True:
-            import pynotify
-            pynotify.init("init")
-            randword = str(randword)
-            randdesc = str(randdesc)
-            randdesc = "<b><i>" + randdesc + "</i></b>"
+            #head = str(head)
+            #body = str(body)
+            head = unicode(head)
+            body = unicode(body)
+            body = "<b><i>" + body + "</i></b>"
             iconPath = os.path.join(os.getcwd(), "icon.png")   # unicoded icon path
             iconPath = iconPath.decode('utf-8')
-            msg = pynotify.Notification(randword, randdesc, os.path.join(os.getcwd(), "icon.png"))
-            msg.set_timeout(self.timeout)
-            msg.show()
+            self.showNotifyd(head, body, iconPath, self.timeout)
         elif self.notifyd == False:
-            self.sysTray.showMessage(randword, randdesc, self.noicon, self.timeout)
+            self.sysTray.showMessage(head, body, self.noicon, self.timeout)
         else:
-            QtGui.QMessageBox.information(self, "ERROR", "Unexpected error occurred!")
+            QtGui.QMessageBox.information(self, self.tr("ERROR"), self.tr("Unexpected error occurred!"))
             self.debug("Unexpected error occurred!")
 
+    def showNotifyd(self, head, body, icon, timeout):
+        #msg = pynotify.Notification(head, body, icon)
+        #msg.set_timeout(timeout)
+        #msg.show()
+        ncmd = "notify-send"
+        subprocess.call([ncmd, "-t", str(timeout), "-i", icon, head, body])
+
     def startClicked(self):
-        self.hide()
+        #self.hide()
         filePath = self.preferences.value("dict").toString()
         self.timeout = self.preferences.value("timeout").toInt()[0]*1000
         self.delay = self.preferences.value("delay").toInt()[0]*1000
         if self.preferences.value("notifyd").toString() == "true":
             self.notifyd = True
+            #global pynotify
+            #import pynotify
+            #pynotify.init("init")
         else:
             self.notifyd = False
         self.icon = QtGui.QSystemTrayIcon.Information
         self.noicon = QtGui.QSystemTrayIcon.NoIcon
-        self.myList = []
+        self.myDict = {}
+        self.myIndex = 0
         filePath = str(filePath.toUtf8())
         filePath = filePath.decode('utf-8')
 
-        with open(filePath) as f:
-            for line in f:
-                self.myList.append(line)
+        with open(filePath, 'rb') as f:
+            reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
+            for line in reader:
+                self.myIndex += 1
+                self.myDict[self.myIndex] = line
         f.close()
 
-        random.shuffle(self.myList)
+        #random.shuffle(self.myList)
 
         self.initTimer()
-        self.sysTray.showMessage("qWordNotify", "Timer started!", self.icon, 1000)
+        self.sysTray.showMessage("qWordNotify", self.tr("Timer started!"), self.icon, 1000)
         self.debug("Timer started!")
 
     def stopClicked(self):
         self.timer.stop()
-        self.sysTray.showMessage("qWordNotify", "Timer stopped!", self.icon, 1000)
+        self.sysTray.showMessage("qWordNotify", self.tr("Timer stopped!"), self.icon, 1000)
         self.debug("Timer stopped!")
 
     def optionsClicked(self):
-        self.prefDialog = preferences.PreferencesDialog()
+        self.prefDialog = PreferencesDialog()
         self.prefDialog.setModal(True)
         self.prefDialog.show()
 
     def about(self):
-        QtGui.QMessageBox.information(self, "About qWordNotify", "<b>qWordNotify 0.1</b><br>(c) 2014 Anonymous")
+        QtGui.QMessageBox.information(self, self.tr("About qWordNotify"), "<b>qWordNotify 0.1</b><br>(c) 2014 Anonymous")
 
     def aboutQt(self):
         QtGui.QApplication.aboutQt()
 
+    def closeEvent(self,event):
+        reply=QtGui.QMessageBox.question(self, self.tr("QUITTING"), self.tr("Are you sure to quit?"), QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+        if reply==QtGui.QMessageBox.Yes:
+            self.preferences.sync()
+            event.accept()
+        else:
+            event.ignore()
+
     def quit(self):
-	self.stopClicked()
         QtGui.qApp.quit()
 
     def debug(self, msg):
         print "DEBUG:", msg
+        
+    def tr(self, text):
+        return QtCore.QCoreApplication.translate("WordNotify_Window", text)
 
-app = QtGui.QApplication(sys.argv)
-#app.setStyle(QtGui.QStyleFactory.create('Cleanlooks'))
-window = WordNotify_Window()
-window.show()
+if __name__ == '__main__':
+    app = QtGui.QApplication(sys.argv)
+#    appTranslator = QtCore.QTranslator()
+#    appTranslator.load('lang/ukr.qm')
+#    app.installTranslator(appTranslator) 
+    #app.setStyle(QtGui.QStyleFactory.create('Cleanlooks'))
+    window = WordNotify_Window()
+    window.setWindowTitle("qWordNotify %s-dev" % appVersion)
+    window.show()
 
 sys.exit(app.exec_())

@@ -162,53 +162,123 @@
    <addaction name="menuAbout"/>
   </widget>
   <action name="actionStart">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/start.png</normaloff>icons/start.png</iconset>
+   </property>
    <property name="text">
     <string>Start</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionQuit">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/exit.png</normaloff>icons/exit.png</iconset>
+   </property>
    <property name="text">
     <string>Quit</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionPreferences">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/preferences.png</normaloff>icons/preferences.png</iconset>
+   </property>
    <property name="text">
     <string>Preferences</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionNew">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/new.png</normaloff>icons/new.png</iconset>
+   </property>
    <property name="text">
     <string>New</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionEdit">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/edit.png</normaloff>icons/edit.png</iconset>
+   </property>
    <property name="text">
     <string>Edit</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionRemove">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/remove.png</normaloff>icons/remove.png</iconset>
+   </property>
    <property name="text">
     <string>Remove</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionAbout">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/help.png</normaloff>icons/help.png</iconset>
+   </property>
    <property name="text">
     <string>About</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionAbout_Qt">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/qt.png</normaloff>icons/qt.png</iconset>
+   </property>
    <property name="text">
     <string>About Qt</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionStop">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/stop.png</normaloff>icons/stop.png</iconset>
+   </property>
    <property name="text">
     <string>Stop</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionShowHide">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/showhide.png</normaloff>icons/showhide.png</iconset>
+   </property>
    <property name="text">
     <string>Show/Hide</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionHide">
@@ -217,8 +287,15 @@
    </property>
   </action>
   <action name="actionAdd">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/add.png</normaloff>icons/add.png</iconset>
+   </property>
    <property name="text">
     <string>Add</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
  </widget>
